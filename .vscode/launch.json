@@ -1,0 +1,30 @@
+{
+  "configurations": [
+    {
+      "name": "build release for win",
+      "type": "shell",
+      "request": "launch",
+      "command": "pwd",
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "compiler release for win"
+    },
+    {
+      "name": "build release",
+      "type": "shell",
+      "request": "launch",
+      "command": "pwd",
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "compiler release"
+    },
+    {
+      "name": "lldb",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/target/debug/${fileBasenameNoExtension}",
+      "args": [],
+      "cwd": "${fileDirname}",
+      "preLaunchTask": "compiler debug"
+    },
+  ],
+  "version": "2.0.0"
+}
