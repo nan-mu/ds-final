@@ -65,7 +65,7 @@ fn test_2_4() {
         .map(|s| s.unwrap().to_string())
         .collect::<Vec<String>>()
         .join("\n");
-    println!("{}", res);
+    // println!("{}", res);
     let mut target = Command::new("target/debug/2-4");
     let mut program = target
         .stdin(Stdio::piped())
@@ -73,12 +73,12 @@ fn test_2_4() {
         .spawn()
         .unwrap();
     let mut stdin = program.stdin.take().expect("Failed to open stdin");
-    std::thread::spawn(move || {
+    let input = std::thread::spawn(move || {
         stdin
             .write_all(res.as_bytes())
             .expect("Failed to write to stdin");
     });
-
+    input.join().unwrap();
     let mut output = program.stdout.take().unwrap();
     let mut buf = String::new();
     output.read_to_string(&mut buf).unwrap();

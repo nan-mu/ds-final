@@ -17,8 +17,8 @@ impl fmt::Display for PmAndYear {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             PmAndYear::None => write!(f, "缺省数据"),
-            PmAndYear::Pm25(pm, year) => write!(f, "{},{}", pm, year.year()),
-            PmAndYear::Pm10(pm, year) => write!(f, "{},{}", pm, year.year()),
+            PmAndYear::Pm25(pm, year) => write!(f, "{}\"{}", pm, year.year()),
+            PmAndYear::Pm10(pm, year) => write!(f, "{}\"{}", pm, year.year()),
         }
     }
 }
@@ -36,7 +36,7 @@ impl fmt::Display for Item {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{},{},{},{},{},{}",
+            "{}\"{}\"{}\"{}\"{}\"{}",
             self.region, self.subregion, self.country, self.city, self.pm10, self.pm25,
         )
     }
