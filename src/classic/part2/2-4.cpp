@@ -12,6 +12,7 @@ struct Item {
     string subregion;
     string country;
     string city;
+    int key;
     struct PmAndYear10 {
         double pm10;
         int year;
@@ -38,6 +39,7 @@ class HashTable {
     // 插入元素
     void insert(Item* node) {
         int index = hash((int)node->pm10.pm10);
+        node->key = index;
         table[index] = node;
     }
 
@@ -48,7 +50,7 @@ class HashTable {
         Item* node = table[index];
         while (node != nullptr) {
             count++;
-            if ((int)node->pm10.pm10 == key) {
+            if (node->key == key) {
                 cout << "哈希查找" << key << "成功，跳数为" << count << endl;
                 cout << node->region << " " << node->subregion << " "
                      << node->country << " " << node->city << " "
@@ -64,22 +66,35 @@ class HashTable {
 
     //折半查找
     int find_half(int key) {
-        int low = 0, high = table_size - 1, mid, count = 0;
+        cout << "来了，key" << key << endl;
+        int low = 0, high = table_size - 1, mid, mod, count = 0;
         while (low <= high) {
             count++;
             mid = (low + high) / 2;
-            if ((int)table[mid]->pm10.pm10 < key) {
+            if (table[mid] == nullptr)
+                mod = mid;
+            else
+                mod = table[mid]->key;
+            if (mod < key) {
                 low = mid + 1;
-            } else if ((int)table[mid]->pm10.pm10 > key) {
+            } else if (mod > key) {
                 high = mid - 1;
             } else {
-                cout << "折半查找" << key << "成功，跳数为" << count << endl;
-                cout << table[mid]->region << " " << table[mid]->subregion
-                     << " " << table[mid]->country << " " << table[mid]->city
-                     << " " << table[mid]->pm10.pm10 << " "
-                     << table[mid]->pm10.year << " " << table[mid]->pm25.pm25
-                     << " " << table[mid]->pm25.year << endl;
-                return mid;
+                if (table[mid] != nullptr) {
+                    cout << "折半查找" << key << "成功，跳数为" << count
+                         << endl;
+                    cout << table[mid]->region << " " << table[mid]->subregion
+                         << " " << table[mid]->country << " "
+                         << table[mid]->city << " " << table[mid]->pm10.pm10
+                         << " " << table[mid]->pm10.year << " "
+                         << table[mid]->pm25.pm25 << " "
+                         << table[mid]->pm25.year << endl;
+                    return mid;
+                } else {
+                    cout << "折半查找" << key << "失败，跳数为" << count
+                         << endl;
+                    return -1;
+                }
             }
         }
         cout << "折半查找" << key << "失败，跳数为" << count << endl;
@@ -144,15 +159,18 @@ int main() {
         table.insert(item);
     }
     int min = 0, max = 100,
-        temp;           //设定随机生成数组的大小，随机数上下限
+        temp = -1;      //设定随机生成数组的大小，随机数上下限
     random_device seed; //硬件生成随机数种子
     ranlux48 engine(seed()); //利用种子生成随机数引擎
     uniform_int_distribution<> distrib(min,
                                        max); //设置随机数范围，并为均匀分布
-    while (table.find(distrib(engine)) == -1) //至少成功一次看看效果
-        ;
-    while (table.find_half(distrib(engine)) == -1) //至少成功一次看看效果
-        ;
+    int target = distrib(engine);
+    while (temp == -1) //至少成功一次看看效果
+    {
+        temp = table.find_half(target);
+        table.find(target);
+        target = distrib(engine);
+    }
 
     cout << "得到所有" << endl;
 }

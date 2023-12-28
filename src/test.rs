@@ -66,7 +66,7 @@ fn test_2_4() {
         .map(|s| s.unwrap().to_string())
         .collect::<Vec<String>>()
         .join("\n");
-    // println!("{}", res);//调试查看数据库输出
+    // println!("{}", res); //调试查看数据库输出
 
     let mut target = Command::new("target/debug/2-4");
     let mut program = target
