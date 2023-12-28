@@ -2,6 +2,7 @@
 /// 数据源为csv，但当时为了
 
 #include <iostream>
+#include <random>
 #include <string>
 #include <vector>
 using namespace std;
@@ -41,18 +42,39 @@ class HashTable {
     }
 
     // 查找元素
-    int find(double key) {
+    int find(int key) {
         int index = hash(key);
         int count = 0; //记录查找跳数
         Item* node = table[index];
         while (node != nullptr) {
             count++;
-            if (node->pm10.pm10 == key) {
-                cout << "查找" << key << "成功，查找跳数为" << count << endl;
+            if ((int)node->pm10.pm10 == key) {
+                cout << "哈希查找" << key << "成功，跳数为" << count << endl;
                 return index;
             }
             node = table[++index];
         }
+        cout << "哈希查找" << key << "失败，跳数为" << count << endl;
+        return -1;
+    }
+
+    //折半查找
+    int find_half(int key) {
+        int low = 0, high = table_size - 1, mid, count = 0;
+        while (low <= high) {
+            count++;
+            mid = (low + high) / 2;
+            if ((int)table[mid]->pm10.pm10 < key) {
+                low = mid + 1;
+            } else if ((int)table[mid]->pm10.pm10 > key) {
+                high = mid - 1;
+            } else {
+                cout << "折半查找" << key << "成功，跳数为" << count << endl;
+                return mid;
+            }
+        }
+        cout << "折半查找" << key << "失败，跳数为" << count << endl;
+        // 没有找到元素
         return -1;
     }
 
@@ -60,10 +82,11 @@ class HashTable {
         for (int i = 0; i < table_size; i++) {
             Item* node = table[i];
             if (node != nullptr) {
-                cout << node->region << " " << node->subregion << " "
-                     << node->country << " " << node->city << " "
-                     << node->pm10.pm10 << " " << node->pm10.year << " "
-                     << node->pm25.pm25 << " " << node->pm25.year << endl;
+                // 看看数据是否真的进来了
+                // cout << node->region << " " << node->subregion << " "
+                //      << node->country << " " << node->city << " "
+                //      << node->pm10.pm10 << " " << node->pm10.year << " "
+                //      << node->pm25.pm25 << " " << node->pm25.year << endl;
                 delete node;
             }
         }
@@ -111,6 +134,16 @@ int main() {
         item->pm25.year = std::stoi(tokens[7]);
         table.insert(item);
     }
+    int min = 0, max = 100,
+        temp;           //设定随机生成数组的大小，随机数上下限
+    random_device seed; //硬件生成随机数种子
+    ranlux48 engine(seed()); //利用种子生成随机数引擎
+    uniform_int_distribution<> distrib(min,
+                                       max); //设置随机数范围，并为均匀分布
+    while (table.find(distrib(engine)) == -1) //至少成功一次看看效果
+        ;
+    while (table.find_half(distrib(engine)) == -1) //至少成功一次看看效果
+        ;
 
     cout << "得到所有" << endl;
 }
