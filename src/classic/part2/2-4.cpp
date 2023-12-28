@@ -43,9 +43,12 @@ class HashTable {
     // 查找元素
     int find(double key) {
         int index = hash(key);
+        int count = 0; //记录查找跳数
         Item* node = table[index];
         while (node != nullptr) {
+            count++;
             if (node->pm10.pm10 == key) {
+                cout << "查找" << key << "成功，查找跳数为" << count << endl;
                 return index;
             }
             node = table[++index];
