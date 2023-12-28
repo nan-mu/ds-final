@@ -7,10 +7,10 @@
 using namespace std;
 
 struct Item {
-    std::string region;
-    std::string subregion;
-    std::string country;
-    std::string city;
+    string region;
+    string subregion;
+    string country;
+    string city;
     struct PmAndYear10 {
         double pm10;
         int year;
@@ -21,10 +21,51 @@ struct Item {
     } pm25;
 };
 
-enum class PmAndYear {
-    Pm25,
-    Pm10,
-    None,
+class HashTable {
+  public:
+    HashTable(int size) {
+        table_size = size;
+        table = new Item*[table_size];
+        for (int i = 0; i < table_size; i++) {
+            table[i] = nullptr;
+        }
+    }
+
+    // 哈希函数
+    int hash(int key) { return key % table_size; }
+
+    // 插入元素
+    void insert(Item* node) {
+        int index = hash(node->pm10.pm10);
+        table[index] = node;
+    }
+
+    // 查找元素
+    int find(double key) {
+        int index = hash(key);
+        Item* node = table[index];
+        while (node != nullptr) {
+            if (node->pm10.pm10 == key) {
+                return index;
+            }
+            node = table[++index];
+        }
+        return -1;
+    }
+
+    ~HashTable() {
+        for (int i = 0; i < table_size; i++) {
+            Item* node = table[i];
+            if (node != nullptr) {
+                delete node;
+            }
+        }
+        delete[] table;
+    }
+
+  private:
+    int table_size;
+    Item** table;
 };
 
 vector<string> split(string str, string token) {
@@ -46,20 +87,20 @@ vector<string> split(string str, string token) {
 
 int main() {
     string get, tmp;
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 100; i++) {
         getline(cin, get);
         //样例：0WprHI,1WprB,2Republic of
         // Korea,3Gunsan,453,52010,624.33262775,72010
         vector<string> tokens = split(get, "\"");
-        Item item;
-        item.region = tokens[0];
-        item.subregion = tokens[1];
-        item.country = tokens[2];
-        item.city = tokens[3];
-        item.pm10.pm10 = std::stod(tokens[4]);
-        item.pm10.year = std::stoi(tokens[5]);
-        item.pm25.pm25 = std::stod(tokens[6]);
-        item.pm25.year = std::stoi(tokens[7]);
+        Item* item = (Item*)malloc(sizeof(Item));
+        item->region = tokens[0];
+        item->subregion = tokens[1];
+        item->country = tokens[2];
+        item->city = tokens[3];
+        item->pm10.year = std::stoi(tokens[5]);
+        item->pm10.pm10 = std::stod(tokens[4]);
+        item->pm25.pm25 = std::stod(tokens[6]);
+        item->pm25.year = std::stoi(tokens[7]);
     }
 
     cout << "得到所有" << endl;
