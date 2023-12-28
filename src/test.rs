@@ -31,6 +31,7 @@ fn test_2_4() {
     use rusqlite::Connection;
     use std::io::Write;
     use std::process::{Command, Stdio};
+    use std::str::from_utf8;
     use std::string::String;
 
     let conn = Connection::open("res/air_quality.db").expect("Could not open database");
@@ -80,5 +81,5 @@ fn test_2_4() {
     });
     input.join().unwrap();
     let output = program.wait_with_output().unwrap();
-    println!("{:?}", output.stdout);
+    println!("{}", from_utf8(&output.stdout).unwrap());
 }

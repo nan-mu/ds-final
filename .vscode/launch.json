@@ -17,6 +17,14 @@
       "preLaunchTask": "compiler release"
     },
     {
+      "name": "build debug",
+      "type": "shell",
+      "request": "launch",
+      "command": "pwd",
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "compiler debug"
+    },
+    {
       "name": "lldb",
       "type": "lldb",
       "request": "launch",
