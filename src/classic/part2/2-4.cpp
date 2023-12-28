@@ -37,7 +37,7 @@ class HashTable {
 
     // 插入元素
     void insert(Item* node) {
-        int index = hash(node->pm10.pm10);
+        int index = hash((int)node->pm10.pm10);
         table[index] = node;
     }
 
@@ -50,6 +50,10 @@ class HashTable {
             count++;
             if ((int)node->pm10.pm10 == key) {
                 cout << "哈希查找" << key << "成功，跳数为" << count << endl;
+                cout << node->region << " " << node->subregion << " "
+                     << node->country << " " << node->city << " "
+                     << node->pm10.pm10 << " " << node->pm10.year << " "
+                     << node->pm25.pm25 << " " << node->pm25.year << endl;
                 return index;
             }
             node = table[++index];
@@ -70,6 +74,11 @@ class HashTable {
                 high = mid - 1;
             } else {
                 cout << "折半查找" << key << "成功，跳数为" << count << endl;
+                cout << table[mid]->region << " " << table[mid]->subregion
+                     << " " << table[mid]->country << " " << table[mid]->city
+                     << " " << table[mid]->pm10.pm10 << " "
+                     << table[mid]->pm10.year << " " << table[mid]->pm25.pm25
+                     << " " << table[mid]->pm25.year << endl;
                 return mid;
             }
         }
