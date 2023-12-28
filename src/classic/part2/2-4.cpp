@@ -57,6 +57,10 @@ class HashTable {
         for (int i = 0; i < table_size; i++) {
             Item* node = table[i];
             if (node != nullptr) {
+                cout << node->region << " " << node->subregion << " "
+                     << node->country << " " << node->city << " "
+                     << node->pm10.pm10 << " " << node->pm10.year << " "
+                     << node->pm25.pm25 << " " << node->pm25.year << endl;
                 delete node;
             }
         }
@@ -87,6 +91,7 @@ vector<string> split(string str, string token) {
 
 int main() {
     string get, tmp;
+    HashTable table(100);
     for (int i = 0; i < 100; i++) {
         getline(cin, get);
         //样例：0WprHI,1WprB,2Republic of
@@ -101,6 +106,7 @@ int main() {
         item->pm10.pm10 = std::stod(tokens[4]);
         item->pm25.pm25 = std::stod(tokens[6]);
         item->pm25.year = std::stoi(tokens[7]);
+        table.insert(item);
     }
 
     cout << "得到所有" << endl;
