@@ -29,7 +29,6 @@ fn test_2_4() {
     use crate::{Build, Item, PmAndYear};
     use chrono::{Datelike, Local};
     use rusqlite::Connection;
-    use std::io::Read;
     use std::io::Write;
     use std::process::{Command, Stdio};
     use std::string::String;
