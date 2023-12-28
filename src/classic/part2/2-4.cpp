@@ -12,11 +12,11 @@ struct Item {
     std::string country;
     std::string city;
     struct PmAndYear10 {
-        double pm25;
+        double pm10;
         int year;
     } pm10;
     struct PmAndYear25 {
-        double pm10;
+        double pm25;
         int year;
     } pm25;
 };
@@ -47,23 +47,21 @@ vector<string> split(string str, string token) {
 int main() {
     string get, tmp;
     getline(cin, get);
-    // for (int i = 0; i < 100; i++) {
-    //     getline(cin, get);
-    //     vector<string> tokens = split(get, ",");
-    //     Item item;
-    //     item.region = tokens[0];
-    //     item.subregion = tokens[1];
-    //     item.country = tokens[2];
-    //     item.city = tokens[3];
-    //     item.pm10.pm25 = std::stod(tokens[4]);
-    //     item.pm10.year_month_day = std::chrono::year_month_day(
-    //         std::stoi(tokens[5]), std::stoi(tokens[6]),
-    //         std::stoi(tokens[7]));
-    //     item.pm25.pm25 = std::stod(tokens[8]);
-    //     item.pm25.year_month_day = std::chrono::year_month_day(
-    //         std::stoi(tokens[9]), std::stoi(tokens[10]),
-    //         std::stoi(tokens[11]));
-    // }
+    for (int i = 0; i < 100; i++) {
+        getline(cin, get);
+        //样例：0WprHI,1WprB,2Republic of
+        //Korea,3Gunsan,453,52010,624.33262775,72010
+        vector<string> tokens = split(get, ",");
+        Item item;
+        item.region = tokens[0];
+        item.subregion = tokens[1];
+        item.country = tokens[2];
+        item.city = tokens[3];
+        item.pm10.pm10 = std::stod(tokens[4]);
+        item.pm10.year = std::stoi(tokens[5]);
+        item.pm25.pm25 = std::stod(tokens[6]);
+        item.pm25.year = std::stoi(tokens[7]);
+    }
 
     cout << get;
 }
