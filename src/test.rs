@@ -65,6 +65,7 @@ fn test_2_4() {
         .map(|s| s.unwrap().to_string())
         .collect::<Vec<String>>()
         .join("\n");
+    println!("{}", res);
     let mut target = Command::new("target/debug/2-4");
     let mut program = target
         .stdin(Stdio::piped())
@@ -80,7 +81,6 @@ fn test_2_4() {
 
     let mut output = program.stdout.take().unwrap();
     let mut buf = String::new();
-    output.read_to_string(&mut buf).unwrap();
     output.read_to_string(&mut buf).unwrap();
     println!("{}", buf);
 }

@@ -46,11 +46,10 @@ vector<string> split(string str, string token) {
 
 int main() {
     string get, tmp;
-    getline(cin, get);
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1; i++) {
         getline(cin, get);
         //样例：0WprHI,1WprB,2Republic of
-        //Korea,3Gunsan,453,52010,624.33262775,72010
+        // Korea,3Gunsan,453,52010,624.33262775,72010
         vector<string> tokens = split(get, ",");
         Item item;
         item.region = tokens[0];
@@ -63,5 +62,6 @@ int main() {
         item.pm25.year = std::stoi(tokens[7]);
     }
 
-    cout << get;
+    cout << get << endl;
+    cout << "得到所有" << endl;
 }
