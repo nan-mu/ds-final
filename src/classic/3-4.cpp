@@ -45,54 +45,15 @@ class HashTable {
         int index = hash((int)node->pm10.pm10);
         node->key = index;
         bool flag = true;
-        for (; index < table_size && flag; index++) {
+        for (; index < table_size || flag; index++) {
             if (table[index] == nullptr)
                 break;
             if (index == table_size - 1) {
-                index = 0;
-                flag = true;
+                index = -1;
+                flag = false;
             }
         }
         table[index] = node;
-    }
-
-    void quick_sort() { quick_sort(0, table_size - 1); }
-    void quick_sort(int left, int right) { //快速排序
-        // 递归终止条件
-        if (left >= right) {
-            return;
-        }
-
-        // 选择基准元素
-        Item* pivot = table[left];
-
-        // 将数组划分为两个子数组
-        int i = left + 1;
-        int j = right;
-        while (i <= j) {
-            // 从左边找到第一个大于基准元素的元素
-            while (i <= right && table[i]->pm25.pm25 <= pivot->pm25.pm25) {
-                i++;
-            }
-
-            // 从右边找到第一个小于基准元素的元素
-            while (j >= left && table[j]->pm25.pm25 >= pivot->pm25.pm25) {
-                j--;
-            }
-
-            // 交换两个元素
-            if (i <= j) {
-                Item* temp = table[i];
-                table[i] = table[j];
-                table[j] = temp;
-                i++;
-                j--;
-            }
-        }
-
-        // 递归对两个子数组进行排序
-        quick_sort(left, j);
-        quick_sort(i, right);
     }
 
     // 查找元素
@@ -194,6 +155,40 @@ vector<string> split(string str, string token) { // c语言没有sqlit是真奇�
     return result;
 }
 
+struct Range {
+    int start, end;
+
+    Range(int s = 0, int e = 0) { start = s, end = e; }
+};
+
+void quick_sort(Item** arr, int len) { //快速排序，换成了非递归的写法
+    if (len <= 0)
+        return;
+    Range r[len];
+    int p = 0;
+    r[p++] = Range(0, len - 1);
+    while (p) {
+        Range range = r[--p];
+        if (range.start >= range.end)
+            continue;
+        double mid = arr[range.end]->pm25.pm25;
+        int left = range.start, right = range.end - 1;
+        while (left < right) {
+            while (arr[left]->pm25.pm25 < mid && left < right)
+                left++;
+            while (arr[right]->pm25.pm25 >= mid && left < right)
+                right--;
+            std::swap(arr[left], arr[right]);
+        }
+        if (arr[left] >= arr[range.end])
+            std::swap(arr[left], arr[range.end]);
+        else
+            left++;
+        r[p++] = Range(range.start, left - 1);
+        r[p++] = Range(left + 1, range.end);
+    }
+}
+
 int main() {
     string get, tmp;
     HashTable table(100);
@@ -250,9 +245,14 @@ int main() {
     cout << "查找100次统计平均查找速度，折半查找，成功："
          << ASL_half_s / success_count << "失败："
          << ASL_half_f / (100 - success_count) << endl;
-
-    //来进行第二种排序，然后会打印前三位pm2.5浓度最高的城市，之前是拿pm10来摆的，所以确实会有不同
-    table.quick_sort();
+    cout << "排序之前：" << endl;
+    for (int i = 0; i < 3; i++) {
+        cout << table.table[i]->city << " " << table.table[i]->pm25.pm25
+             << endl;
+    }
+    cout << "排序之后：" << endl;
+    //来进行第二种排序，然后会打印前三位pm2.5浓度最低的城市，之前是拿pm10来摆的，所以确实会有不同
+    quick_sort(table.table, table.table_size);
     for (int i = 0; i < 3; i++) {
         cout << table.table[i]->city << " " << table.table[i]->pm25.pm25
              << endl;
