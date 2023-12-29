@@ -25,7 +25,7 @@ fn test_command() {
 }
 
 #[test]
-fn test_2_4() {
+fn test_3_4() {
     use crate::{Build, Item, PmAndYear};
     use chrono::{Datelike, Local};
     use rusqlite::Connection;
@@ -68,7 +68,7 @@ fn test_2_4() {
         .join("\n");
     // println!("{}", res); //调试查看数据库输出
 
-    let mut target = Command::new("target/debug/2-4");
+    let mut target = Command::new("target/debug/3-4");
     let mut program = target
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())

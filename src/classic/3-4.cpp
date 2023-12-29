@@ -1,6 +1,7 @@
 /// 由于我上学期没有做到学生数据这道题目，所以这次的数据来自另一门数据库的课设作业。数据源见src/9.world_pm25.db
 /// 数据源为csv，但当时为了
 
+#include <algorithm>
 #include <iostream>
 #include <random>
 #include <string>
@@ -32,6 +33,10 @@ class HashTable {
             table[i] = nullptr;
         }
     }
+    struct recode {       //用来记录查找次数
+        vector<int> hash; //记录正数为查找成功，负数为失败
+        vector<int> half;
+    } recode;
 
     // 哈希函数
     int hash(int key) { return key % table_size; }
@@ -51,6 +56,7 @@ class HashTable {
         while (node != nullptr) {
             count++;
             if (node->key == key) {
+                recode.hash.push_back(count);
                 cout << "哈希查找" << key << "成功，跳数为" << count << endl;
                 cout << node->region << " " << node->subregion << " "
                      << node->country << " " << node->city << " "
@@ -60,6 +66,7 @@ class HashTable {
             }
             node = table[++index];
         }
+        recode.hash.push_back(0 - count);
         cout << "哈希查找" << key << "失败，跳数为" << count << endl;
         return -1;
     }
@@ -81,6 +88,7 @@ class HashTable {
                 high = mid - 1;
             } else {
                 if (table[mid] != nullptr) {
+                    recode.half.push_back(count);
                     cout << "折半查找" << key << "成功，跳数为" << count
                          << endl;
                     cout << table[mid]->region << " " << table[mid]->subregion
@@ -91,6 +99,7 @@ class HashTable {
                          << table[mid]->pm25.year << endl;
                     return mid;
                 } else {
+                    recode.half.push_back(0 - count);
                     cout << "折半查找" << key << "失败，跳数为" << count
                          << endl;
                     return -1;
@@ -174,6 +183,24 @@ int main() {
         }
         temp = -1;
     }
+    size_t ASL_hash_s = 0, ASL_hash_f = 0, ASL_half_s = 0, ASL_half_f = 0;
+    for (auto index : table.recode.hash) {
+        if (index > 0) {
+            ASL_hash_s += index;
+        } else {
+            ASL_hash_f -= index;
+        }
+    }
+    for (auto index : table.recode.half) {
+        if (index > 0) {
+            ASL_half_s += index;
+        } else {
+            ASL_half_f -= index;
+        }
+    }
 
-    cout << "得到所有" << endl;
+    cout << "查找1000次，哈希查找的ASL为" << ASL_hash_s << " " << ASL_hash_f
+         << endl;
+    cout << "查找1000次，折半查找的ASL为" << ASL_half_s << " " << ASL_half_f
+         << endl;
 }
