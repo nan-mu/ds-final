@@ -122,7 +122,7 @@ class HashTable {
     Item** table;
 };
 
-vector<string> split(string str, string token) {
+vector<string> split(string str, string token) { // c语言没有sqlit是真奇怪
     vector<string> result;
     while (str.size()) {
         int index = str.find(token);
@@ -164,12 +164,15 @@ int main() {
     ranlux48 engine(seed()); //利用种子生成随机数引擎
     uniform_int_distribution<> distrib(min,
                                        max); //设置随机数范围，并为均匀分布
-    int target = distrib(engine);
-    while (temp == -1) //至少成功一次看看效果
-    {
-        temp = table.find_half(target);
-        table.find(target);
-        target = distrib(engine);
+
+    for (int index = 0; index < 1000; index++) {
+        int target = distrib(engine);
+        while (temp == -1) {
+            temp = table.find_half(target);
+            table.find(target);
+            target = distrib(engine);
+        }
+        temp = -1;
     }
 
     cout << "得到所有" << endl;
