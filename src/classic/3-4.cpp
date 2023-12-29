@@ -41,20 +41,66 @@ class HashTable {
     // 哈希函数
     int hash(int key) { return key % table_size; }
 
-    // 插入元素
-    void insert(Item* node) {
+    void insert(Item* node) { // 插入元素，也算一种排序
         int index = hash((int)node->pm10.pm10);
         node->key = index;
+        bool flag = true;
+        for (; index < table_size && flag; index++) {
+            if (table[index] == nullptr)
+                break;
+            if (index == table_size - 1) {
+                index = 0;
+                flag = true;
+            }
+        }
         table[index] = node;
+    }
+
+    void quick_sort() { quick_sort(0, table_size - 1); }
+    void quick_sort(int left, int right) { //快速排序
+        // 递归终止条件
+        if (left >= right) {
+            return;
+        }
+
+        // 选择基准元素
+        Item* pivot = table[left];
+
+        // 将数组划分为两个子数组
+        int i = left + 1;
+        int j = right;
+        while (i <= j) {
+            // 从左边找到第一个大于基准元素的元素
+            while (i <= right && table[i]->pm25.pm25 <= pivot->pm25.pm25) {
+                i++;
+            }
+
+            // 从右边找到第一个小于基准元素的元素
+            while (j >= left && table[j]->pm25.pm25 >= pivot->pm25.pm25) {
+                j--;
+            }
+
+            // 交换两个元素
+            if (i <= j) {
+                Item* temp = table[i];
+                table[i] = table[j];
+                table[j] = temp;
+                i++;
+                j--;
+            }
+        }
+
+        // 递归对两个子数组进行排序
+        quick_sort(left, j);
+        quick_sort(i, right);
     }
 
     // 查找元素
     int find(int key) {
         int index = hash(key);
-        int count = 0; //记录查找跳数
+        int count = 1; //记录查找跳数
         Item* node = table[index];
         while (node != nullptr) {
-            count++;
             if (node->key == key) {
                 recode.hash.push_back(count);
                 cout << "哈希查找" << key << "成功，跳数为" << count << endl;
@@ -64,6 +110,7 @@ class HashTable {
                      << node->pm25.pm25 << " " << node->pm25.year << endl;
                 return index;
             }
+            count++;
             node = table[++index];
         }
         recode.hash.push_back(0 - count);
@@ -126,7 +173,6 @@ class HashTable {
         delete[] table;
     }
 
-  private:
     int table_size;
     Item** table;
 };
@@ -151,7 +197,7 @@ vector<string> split(string str, string token) { // c语言没有sqlit是真奇�
 int main() {
     string get, tmp;
     HashTable table(100);
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++) { //可以认为哈希查找已经进行了一次排序
         getline(cin, get);
         //样例：0WprHI,1WprB,2Republic of
         // Korea,3Gunsan,453,52010,624.33262775,72010
@@ -174,19 +220,18 @@ int main() {
     uniform_int_distribution<> distrib(min,
                                        max); //设置随机数范围，并为均匀分布
 
-    for (int index = 0; index < 1000; index++) {
+    for (int index = 0; index < 100; index++) {
         int target = distrib(engine);
-        while (temp == -1) {
-            temp = table.find_half(target);
-            table.find(target);
-            target = distrib(engine);
-        }
-        temp = -1;
+        temp = table.find_half(target);
+        table.find(target);
+        target = distrib(engine);
     }
-    size_t ASL_hash_s = 0, ASL_hash_f = 0, ASL_half_s = 0, ASL_half_f = 0;
+    double ASL_hash_s = 0, ASL_hash_f = 0, ASL_half_s = 0, ASL_half_f = 0,
+           success_count = 0;
     for (auto index : table.recode.hash) {
         if (index > 0) {
             ASL_hash_s += index;
+            success_count++;
         } else {
             ASL_hash_f -= index;
         }
@@ -199,8 +244,17 @@ int main() {
         }
     }
 
-    cout << "查找1000次，哈希查找的ASL为" << ASL_hash_s << " " << ASL_hash_f
-         << endl;
-    cout << "查找1000次，折半查找的ASL为" << ASL_half_s << " " << ASL_half_f
-         << endl;
+    cout << "查找100次统计平均查找速度，哈希查找，成功："
+         << ASL_hash_s / success_count << "失败："
+         << ASL_hash_f / (100 - success_count) << endl;
+    cout << "查找100次统计平均查找速度，折半查找，成功："
+         << ASL_half_s / success_count << "失败："
+         << ASL_half_f / (100 - success_count) << endl;
+
+    //来进行第二种排序，然后会打印前三位pm2.5浓度最高的城市，之前是拿pm10来摆的，所以确实会有不同
+    table.quick_sort();
+    for (int i = 0; i < 3; i++) {
+        cout << table.table[i]->city << " " << table.table[i]->pm25.pm25
+             << endl;
+    }
 }
