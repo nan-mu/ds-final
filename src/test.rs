@@ -1,5 +1,5 @@
 #[test]
-fn test_command() {
+fn test_123() {
     use std::io::Read;
     use std::io::Write;
     use std::process::{Command, Stdio};
@@ -69,6 +69,7 @@ fn test_3_4() {
     // println!("{}", res); //调试查看数据库输出
 
     let mut target = Command::new("target/debug/3-4");
+    let start = Local::now();
     let mut program = target
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -80,8 +81,10 @@ fn test_3_4() {
     });
     input.join().unwrap();
     let output = program.wait_with_output().expect("打开程序stdout失败");
+    let duration = Local::now() - start;
     println!(
         "{}",
         from_utf8(&output.stdout).expect("解析c程序stdout失败")
     );
+    println!("题3-4耗时：{}", duration);
 }
