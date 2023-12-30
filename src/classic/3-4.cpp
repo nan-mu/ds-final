@@ -86,13 +86,9 @@ class HashTable {
         while (low <= high) {
             count++;
             mid = (low + high) / 2;
-            if (table[mid] == nullptr)
-                mod = mid;
-            else
-                mod = table[mid]->key;
-            if (mod < key) {
+            if ((int)table[mid]->pm25.pm25 < key) {
                 low = mid + 1;
-            } else if (mod > key) {
+            } else if ((int)table[mid]->pm25.pm25 > key) {
                 high = mid - 1;
             } else {
                 if (table[mid] != nullptr) {
@@ -114,6 +110,7 @@ class HashTable {
                 }
             }
         }
+        recode.half.push_back(0 - count);
         cout << "折半查找" << key << "失败，跳数为" << count << endl;
         // 没有找到元素
         return -1;
@@ -208,18 +205,15 @@ int main() {
         item->pm25.year = std::stoi(tokens[7]);
         table.insert(item);
     }
-    int min = 0, max = 100,
-        temp = -1;      //设定随机生成数组的大小，随机数上下限
-    random_device seed; //硬件生成随机数种子
+    int min = 0, max = 100; //设定随机生成数组的大小，随机数上下限
+    random_device seed;     //硬件生成随机数种子
     ranlux48 engine(seed()); //利用种子生成随机数引擎
     uniform_int_distribution<> distrib(min,
                                        max); //设置随机数范围，并为均匀分布
 
     for (int index = 0; index < 100; index++) {
         int target = distrib(engine);
-        temp = table.find_half(target);
         table.find(target);
-        target = distrib(engine);
     }
     double ASL_hash_s = 0, ASL_hash_f = 0, ASL_half_s = 0, ASL_half_f = 0,
            success_count = 0;
@@ -231,20 +225,11 @@ int main() {
             ASL_hash_f -= index;
         }
     }
-    for (auto index : table.recode.half) {
-        if (index > 0) {
-            ASL_half_s += index;
-        } else {
-            ASL_half_f -= index;
-        }
-    }
 
     cout << "查找100次统计平均查找速度，哈希查找，成功："
          << ASL_hash_s / success_count << "失败："
          << ASL_hash_f / (100 - success_count) << endl;
-    cout << "查找100次统计平均查找速度，折半查找，成功："
-         << ASL_half_s / success_count << "失败："
-         << ASL_half_f / (100 - success_count) << endl;
+
     cout << "排序之前：" << endl;
     for (int i = 0; i < 3; i++) {
         cout << table.table[i]->city << " " << table.table[i]->pm25.pm25
@@ -257,4 +242,20 @@ int main() {
         cout << table.table[i]->city << " " << table.table[i]->pm25.pm25
              << endl;
     }
+    for (int index = 0; index < 100; index++) { //启动折半查找
+        int target = distrib(engine);
+        table.find_half(target);
+    }
+    success_count = 0;
+    for (auto index : table.recode.half) { //统计查找跳数
+        if (index > 0) {
+            ASL_half_s += index;
+            success_count++;
+        } else {
+            ASL_half_f -= index;
+        }
+    }
+    cout << "查找100次统计平均查找速度，折半查找，成功："
+         << ASL_half_s / success_count << "失败："
+         << ASL_half_f / ((double)100 - success_count) << endl;
 }
