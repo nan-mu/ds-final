@@ -12,9 +12,7 @@ class Node {
   public:
     char data;
     vector<Node*> children;
-
     Node(char val) : data(val) {}
-
     ~Node() {
         for (Node* child : children) {
             delete child;
@@ -162,10 +160,6 @@ class Tree {
         while (!task.empty()) {
             Node* current = task.front();
             task.pop();
-
-            if (current == node) {
-            }
-
             for (Node* child : current->children) {
                 if (child) {
                     task.push(child);
