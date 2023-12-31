@@ -6,7 +6,6 @@
             "command": "clang++",
             "args": [
                 "-g",
-                "--std=c++2a",
                 "${file}",
                 "-I./include",
                 "-v",
@@ -24,7 +23,6 @@
             "command": "clang++",
             "args": [
                 "--std=c++20",
-                "--stdlib=libc++",
                 "-fexperimental-library",
                 "${file}",
                 "-I./include",

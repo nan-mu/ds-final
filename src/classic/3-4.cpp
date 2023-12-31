@@ -33,8 +33,8 @@ class HashTable {
             table[i] = nullptr;
         }
     }
-    struct recode {       //用来记录查找次数
-        vector<int> hash; //记录正数为查找成功，负数为失败
+    struct recode {       // 用来记录查找次数
+        vector<int> hash; // 记录正数为查找成功，负数为失败
         vector<int> half;
     } recode;
 
@@ -59,7 +59,7 @@ class HashTable {
     // 查找元素
     int find(int key) {
         int index = hash(key);
-        int count = 1; //记录查找跳数
+        int count = 1; // 记录查找跳数
         Item* node = table[index];
         while (node != nullptr) {
             if (node->key == key) {
@@ -79,7 +79,7 @@ class HashTable {
         return -1;
     }
 
-    //折半查找
+    // 折半查找
     int find_half(int key) {
         cout << "来了，key" << key << endl;
         int low = 0, high = table_size - 1, mid, mod, count = 0;
@@ -135,8 +135,8 @@ class HashTable {
     Item** table;
 };
 
-vector<string> split(string str, string token) { // c语言没有sqlit是真奇怪
-    vector<string> result;
+void split(string str, string token,
+           vector<string> result) { // c语言没有sqlit是真奇怪
     while (str.size()) {
         int index = str.find(token);
         if (index != string::npos) {
@@ -149,7 +149,6 @@ vector<string> split(string str, string token) { // c语言没有sqlit是真奇�
             str = "";
         }
     }
-    return result;
 }
 
 struct Range {
@@ -158,10 +157,10 @@ struct Range {
     Range(int s = 0, int e = 0) { start = s, end = e; }
 };
 
-void quick_sort(Item** arr, int len) { //快速排序，换成了非递归的写法
+void quick_sort(Item** arr, const int len) { // 快速排序，换成了非递归的写法
     if (len <= 0)
         return;
-    Range r[len];
+    Range r[100];
     int p = 0;
     r[p++] = Range(0, len - 1);
     while (p) {
@@ -187,13 +186,14 @@ void quick_sort(Item** arr, int len) { //快速排序，换成了非递归的写
 }
 
 int main() {
-    string get, tmp;
     HashTable table(100);
-    for (int i = 0; i < 100; i++) { //可以认为哈希查找已经进行了一次排序
-        getline(cin, get);
-        //样例：0WprHI,1WprB,2Republic of
-        // Korea,3Gunsan,453,52010,624.33262775,72010
-        vector<string> tokens = split(get, "\"");
+    for (int i = 0; i < 100; i++) { // 可以认为哈希查找已经进行了一次排序
+        string get = "";
+        cin.getline(&get[0], 100);
+        // 样例：0WprHI,1WprB,2Republic of
+        //  Korea,3Gunsan,453,52010,624.33262775,72010
+        vector<string> tokens;
+        split(get, "\"", tokens);
         Item* item = (Item*)malloc(sizeof(Item));
         item->region = tokens[0];
         item->subregion = tokens[1];
@@ -205,11 +205,11 @@ int main() {
         item->pm25.year = std::stoi(tokens[7]);
         table.insert(item);
     }
-    int min = 0, max = 100; //设定随机生成数组的大小，随机数上下限
-    random_device seed;     //硬件生成随机数种子
-    ranlux48 engine(seed()); //利用种子生成随机数引擎
+    int min = 0, max = 100; // 设定随机生成数组的大小，随机数上下限
+    random_device seed;      // 硬件生成随机数种子
+    ranlux48 engine(seed()); // 利用种子生成随机数引擎
     uniform_int_distribution<> distrib(min,
-                                       max); //设置随机数范围，并为均匀分布
+                                       max); // 设置随机数范围，并为均匀分布
 
     for (int index = 0; index < 100; index++) {
         int target = distrib(engine);
@@ -236,18 +236,18 @@ int main() {
              << endl;
     }
     cout << "排序之后：" << endl;
-    //来进行第二种排序，然后会打印前三位pm2.5浓度最低的城市，之前是拿pm10来摆的，所以确实会有不同
-    quick_sort(table.table, table.table_size);
+    // 来进行第二种排序，然后会打印前三位pm2.5浓度最低的城市，之前是拿pm10来摆的，所以确实会有不同
+    quick_sort(table.table, 100);
     for (int i = 0; i < 3; i++) {
         cout << table.table[i]->city << " " << table.table[i]->pm25.pm25
              << endl;
     }
-    for (int index = 0; index < 100; index++) { //启动折半查找
+    for (int index = 0; index < 100; index++) { // 启动折半查找
         int target = distrib(engine);
         table.find_half(target);
     }
     success_count = 0;
-    for (auto index : table.recode.half) { //统计查找跳数
+    for (auto index : table.recode.half) { // 统计查找跳数
         if (index > 0) {
             ASL_half_s += index;
             success_count++;
