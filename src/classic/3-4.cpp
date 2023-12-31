@@ -189,12 +189,11 @@ void quick_sort(Item** arr, const int len) { // 快速排序，换成了非递�
 int main() {
     HashTable table(100);
     for (int i = 0; i < 100; i++) { // 可以认为哈希查找已经进行了一次排序
-        char get[100] = "";
-        cin.getline(&get[0], 100);
+        string get = "";
+        getline(cin, get);
         // 样例：0WprHI,1WprB,2Republic of
         //  Korea,3Gunsan,453,52010,624.33262775,72010
-        vector<char*> tokens;
-        split(get, "\"", tokens);
+        vector<string> tokens = split(get, "\"");
         Item* item = (Item*)malloc(sizeof(Item));
         item->region = tokens[0];
         item->subregion = tokens[1];
