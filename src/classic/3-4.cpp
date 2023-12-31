@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
+#include <string.h>
 #include <string>
 #include <vector>
 using namespace std;
