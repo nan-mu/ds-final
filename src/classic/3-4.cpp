@@ -2,9 +2,9 @@
 /// 数据源为csv，但当时为了
 
 #include <algorithm>
-#include <cstring>
 #include <iostream>
 #include <random>
+#include <string.h>
 #include <string>
 #include <vector>
 
@@ -137,19 +137,18 @@ class HashTable {
     Item** table;
 };
 
-void split(string str, string token,
-           vector<string> result) { // c语言没有sqlit是真奇怪
-    while (str.size()) {
-        int index = str.find(token);
-        if (index != string::npos) {
-            result.push_back(str.substr(0, index));
-            str = str.substr(index + token.size());
-            if (str.size() == 0)
-                result.push_back(str);
-        } else {
-            result.push_back(str);
-            str = "";
+void split(char* str, const char* delimiter, vector<char*> result) {
+    while (str != NULL) {
+        // 获取从当前位置开始的下一个子字符串
+        char* token = strtok(str, delimiter);
+        // 如果子字符串为空，则退出循环
+        if (token == NULL) {
+            break;
         }
+        // 将子字符串添加到结果数组中
+        result.push_back(token);
+        // 设置下一次循环的起始位置
+        str = NULL;
     }
 }
 
@@ -194,7 +193,7 @@ int main() {
         cin.getline(&get[0], 100);
         // 样例：0WprHI,1WprB,2Republic of
         //  Korea,3Gunsan,453,52010,624.33262775,72010
-        vector<string> tokens;
+        vector<char*> tokens;
         split(get, "\"", tokens);
         Item* item = (Item*)malloc(sizeof(Item));
         item->region = tokens[0];
