@@ -7,7 +7,6 @@
 #include <string.h>
 #include <string>
 #include <vector>
-
 using namespace std;
 
 struct Item {
@@ -189,9 +188,10 @@ void quick_sort(Item** arr, const int len) { // 快速排序，换成了非递�
 }
 
 int main() {
+
     HashTable table(100);
     for (int i = 0; i < 100; i++) { // 可以认为哈希查找已经进行了一次排序
-        string get = "";
+        string get = "111";
         getline(cin, get);
         // 样例：0WprHI,1WprB,2Republic of
         //  Korea,3Gunsan,453,52010,624.33262775,72010
@@ -239,7 +239,7 @@ int main() {
     }
     cout << "排序之后：" << endl;
     // 来进行第二种排序，然后会打印前三位pm2.5浓度最低的城市，之前是拿pm10来摆的，所以确实会有不同
-    quick_sort(table.table, 100);
+    quick_sort(table.table, table.table_size);
     for (int i = 0; i < 3; i++) {
         cout << table.table[i]->city << " " << table.table[i]->pm25.pm25
              << endl;
