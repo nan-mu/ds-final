@@ -137,19 +137,21 @@ class HashTable {
     Item** table;
 };
 
-void split(char* str, const char* delimiter, vector<char*> result) {
-    while (str != NULL) {
-        // 获取从当前位置开始的下一个子字符串
-        char* token = strtok(str, delimiter);
-        // 如果子字符串为空，则退出循环
-        if (token == NULL) {
-            break;
+vector<string> split(string str, string token) { // c语言没有sqlit是真奇怪
+    vector<string> result;
+    while (str.size()) {
+        int index = str.find(token);
+        if (index != string::npos) {
+            result.push_back(str.substr(0, index));
+            str = str.substr(index + token.size());
+            if (str.size() == 0)
+                result.push_back(str);
+        } else {
+            result.push_back(str);
+            str = "";
         }
-        // 将子字符串添加到结果数组中
-        result.push_back(token);
-        // 设置下一次循环的起始位置
-        str = NULL;
     }
+    return result;
 }
 
 struct Range {
