@@ -10,5 +10,5 @@ fn test_123() {
 fn test_3_4() {
     use crate::{get_data, run_with_stdin, Mode};
     let input = get_data();
-    run_with_stdin(Mode::Release, "3-4", input);
+    run_with_stdin(Mode::Debug, "3-4", input);
 }
