@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
-#include <string.h>
 #include <string>
 #include <vector>
 using namespace std;
@@ -82,7 +81,7 @@ class HashTable {
 
     // 折半查找
     int find_half(int key) {
-        cout << "来了，key" << key << endl;
+        // cout << "来了，key" << key << endl;
         int low = 0, high = table_size - 1, mid, mod, count = 0;
         while (low <= high) {
             count++;
