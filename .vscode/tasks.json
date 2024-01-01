@@ -23,8 +23,8 @@
             "label": "compiler release",
             "command": "clang++",
             "args": [
-                "--std=c++20",
-                "--stdlib=libc++",
+                "--std=c++2c",
+                "-stdlib=libstdc++",
                 "-fexperimental-library",
                 "${file}",
                 "-I./include",

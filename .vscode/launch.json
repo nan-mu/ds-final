@@ -2,26 +2,23 @@
   "configurations": [
     {
       "name": "build release for win in wsl",
-      "type": "shell",
+      "type": "f5anything",
       "request": "launch",
       "command": "echo 1",
-      "cwd": "${workspaceRoot}",
       "preLaunchTask": "compiler release for win"
     },
     {
       "name": "build release",
-      "type": "shell",
+      "type": "f5anything",
       "request": "launch",
-      "command": "echo 1",
-      "cwd": "${workspaceRoot}",
+      "command": "pwd",
       "preLaunchTask": "compiler release"
     },
     {
       "name": "build debug",
-      "type": "shell",
+      "type": "f5anything",
       "request": "launch",
       "command": "echo 1",
-      "cwd": "${workspaceRoot}",
       "preLaunchTask": "compiler debug"
     },
     {
