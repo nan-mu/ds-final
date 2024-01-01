@@ -33,6 +33,14 @@
       "cwd": "${fileDirname}",
       "preLaunchTask": "compiler debug"
     },
+    {
+      "name": "gdb",
+      "type": "by-gdb",
+      "request": "launch",
+      "program": "${workspaceRoot}/target/debug/${fileBasenameNoExtension}.exe",
+      "cwd": "${fileDirname}",
+      "preLaunchTask": "compiler debug"
+    },
   ],
   "version": "2.0.0"
 }

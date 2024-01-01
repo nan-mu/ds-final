@@ -6,7 +6,9 @@
             "command": "clang++",
             "args": [
                 "-g",
-                "--std=c++2a",
+                "--stdlib=libc++",
+                "-std=c++17",
+                "-fstandalone-debug",
                 "${file}",
                 "-I./include",
                 "-v",

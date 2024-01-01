@@ -135,8 +135,8 @@ class HashTable {
     Item** table;
 };
 
-vector<string> split(string str, string token) { // c语言没有sqlit是真奇怪
-    vector<string> result;
+void split(string str, string token,
+           vector<string> result) { // c语言没有sqlit是真奇怪
     while (str.size()) {
         int index = str.find(token);
         if (index != string::npos) {
@@ -149,7 +149,6 @@ vector<string> split(string str, string token) { // c语言没有sqlit是真奇�
             str = "";
         }
     }
-    return result;
 }
 
 struct Range {
@@ -190,11 +189,28 @@ int main() {
 
     HashTable table(100);
     for (int i = 0; i < 100; i++) { // 可以认为哈希查找已经进行了一次排序
-        string get = "111";
-        getline(cin, get);
+        string get = "0WprHI,1WprB,2Republic of "
+                     "Korea,3Gunsan,453,52010,624.33262775,72010";
+        // getline(cin, get);
         // 样例：0WprHI,1WprB,2Republic of
         //  Korea,3Gunsan,453,52010,624.33262775,72010
-        vector<string> tokens = split(get, "\"");
+        // string_view sv(get);
+        string tokens[8];
+        string token = ",", temp = "";
+        size_t index = 0;
+        for (char c : get) {
+            switch (c) {
+            case '\"':
+                tokens[index] = temp; // 理论上讲c++的字符串是深拷贝
+                index++;
+                temp = "";
+                break;
+            default:
+                temp += c;
+                break;
+            }
+        }
+
         Item* item = (Item*)malloc(sizeof(Item));
         item->region = tokens[0];
         item->subregion = tokens[1];
